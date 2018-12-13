@@ -7,4 +7,19 @@ namespace Developer.Models.Requests
         public decimal Version { get; set; }
         public string ModifiedBy { get; set; }
     }
+    public class InputControlAddRequest
+    {
+        public int FormId { get; set; }
+        public int InputTypeId { get; set; }
+        public string Label { get; set; }
+        public string Type { get; set; }
+        public string Name { get; set; }
+        public int ParentId { get; set; }
+        public int Position { get; set; }
+    }
+     public class OrgFormAddRequest
+    {
+        public int FormId { get; set; }
+        public int OrgId { get; set; }
+    }
 }
