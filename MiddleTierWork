@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Developer.Models.Requests
+{
+    public class FormAddRequest
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public decimal Version { get; set; }
+        public string ModifiedBy { get; set; }
+
+    }
+}
