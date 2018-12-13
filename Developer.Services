@@ -1,0 +1,106 @@
+using System.Data;
+using System.Data.SqlClient;
+
+using Developer.Data;
+using Developer.Data.Providers;
+using Developer.Models.Requests;
+using Developer.Services.Interfaces;
+using Developer.Models.Domain;
+
+namespace Developer.Services
+{
+    public class FormService : IFormService
+    {
+        private IDataProvider _dataProvider;
+
+        public FormService (IDataProvider dataProvider)
+        {
+            _dataProvider = dataProvider;
+        }
+
+        public int Create(FormAddRequest model)
+        {
+            int id = 0;
+            this._dataProvider.ExecuteNonQuery(
+                "Form_Insert",
+               inputParamMapper: delegate (SqlParameterCollection paramList)
+               {
+                   SqlParameter param = new SqlParameter();
+                   param.ParameterName = "@Id";
+                   param.SqlDbType = SqlDbType.Int;
+                   param.Direction = ParameterDirection.Output;
+                   paramList.Add(param);
+
+                   paramList.AddWithValue("@Title", model.Title);
+                   paramList.AddWithValue("@Description", model.Description);
+                   paramList.AddWithValue("@Version", model.Version);
+                   paramList.AddWithValue("@ModifiedBy", model.ModifiedBy);
+               },
+               returnParameters: delegate (SqlParameterCollection paramList)
+               {
+                   id = (int)paramList["@Id"].Value;
+               });
+            return id;
+         }
+    }
+    
+    public class InputControlService : IInputControlService
+    {
+        private IDataProvider _dataProvider;
+
+        public InputControlService(IDataProvider dataProvider)
+        {
+            _dataProvider = dataProvider;
+        }
+
+        public int Create(InputControlAddRequest model)
+        {
+            int id = 0;
+            this._dataProvider.ExecuteNonQuery(
+                "InputControls_Insert",
+                inputParamMapper: delegate (SqlParameterCollection paramList)
+                {
+                    SqlParameter param = new SqlParameter();
+                    param.ParameterName = "@Id";
+                    param.SqlDbType = SqlDbType.Int;
+                    param.Direction = ParameterDirection.Output;
+                    paramList.Add(param);
+
+                    paramList.AddWithValue("@FormId", model.FormId);
+                    paramList.AddWithValue("@InputTypeId", model.InputTypeId);
+                    paramList.AddWithValue("@Label", model.Label);
+                    paramList.AddWithValue("@Type", model.Type);
+                    paramList.AddWithValue("@Name", model.Name);
+                    paramList.AddWithValue("@ParentId", model.ParentId);
+                    paramList.AddWithValue("@Position", model.Position);
+                },
+                returnParameters: delegate (SqlParameterCollection paramList)
+                {
+                    id = (int)paramList["@Id"].Value;
+                });
+            return id;
+        }
+    }
+    
+    public class OrgFormService : IOrgFormService
+    {
+        private IDataProvider _dataProvider;
+
+        public OrgFormService(IDataProvider dataProvider)
+        {
+            _dataProvider = dataProvider;
+        }
+
+        public OrgFormAddRequest Create(OrgFormAddRequest model)
+        {
+            this._dataProvider.ExecuteNonQuery(
+                "OrgForm_Insert",
+                inputParamMapper: delegate (SqlParameterCollection paramList)
+                {
+                    paramList.AddWithValue("@FormId", model.FormId);
+                    paramList.AddWithValue("@OrgId", model.OrgId);
+                });
+            return model;
+        }
+    }
+}
