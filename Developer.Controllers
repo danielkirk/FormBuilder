@@ -1,0 +1,119 @@
+using Developer.Models.Domain;
+using Developer.Models.Requests;
+using Developer.Models.Responses;
+using Developer.Services;
+using Developer.Services.Interfaces;
+
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+
+namespace Developer.Web.Controllers.Api
+{
+    [AllowAnonymous]
+    [RoutePrefix("api/form")]
+    public class FormApiController : ApiController
+    {
+        private IFormService _formService;
+        private ILogsService _logsService;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public FormApiController(IFormService formService, ILogsService logsService)
+        {
+            _formService = formService;
+            _logsService = logsService;
+        }
+
+        [HttpPost]
+        [Route("")]
+        public HttpResponseMessage Create(FormAddRequest model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    int id = _formService.Create(model);
+                    ItemResponse<int> resp = new ItemResponse<int>();
+                    resp.Item = id;
+                    log.Info("Create Form");
+                    return Request.CreateResponse(HttpStatusCode.OK, resp);
+                }
+                else
+                {
+                    log.Error("Error: Model State Invalid");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error: Create Form Failed", ex);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
+    }
+    
+    [AllowAnonymous]
+    [RoutePrefix("api/inputcontrols")]
+    public class InputControlApiController : ApiController
+    {
+        private IInputControlService _inputControlService;
+        private ILogsService _logsService;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public InputControlApiController(IInputControlService inputControlService, ILogsService logsService)
+        {
+            _inputControlService = inputControlService;
+            _logsService = logsService;
+        }
+
+        [HttpPost]
+        [Route("")]
+        public HttpResponseMessage Create(InputControlAddRequest model)
+        {
+            try
+            {
+                int id = _inputControlService.Create(model);
+                ItemResponse<int> resp = new ItemResponse<int>();
+                resp.Item = id;
+                log.Info("Create Input Control");
+                return Request.CreateResponse(HttpStatusCode.OK, resp);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error: Input Control Insert Failed", ex);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
+    }
+    
+    [AllowAnonymous]
+    [RoutePrefix("api/orgform")]
+    public class OrgFormApiController : ApiController
+    {
+        private IOrgFormService _orgFormService;
+        private ILogsService _logsService;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public OrgFormApiController(IOrgFormService orgFormService, ILogsService logsService)
+        {
+            _orgFormService = orgFormService;
+            _logsService = logsService;
+        }
+
+        [HttpPost]
+        [Route("")]
+        public HttpResponseMessage Create(OrgFormAddRequest model)
+        {
+            try
+            {
+                ItemResponse<OrgFormAddRequest> resp = new ItemResponse<OrgFormAddRequest>();
+                resp.Item = _orgFormService.Create(model);
+                log.Info("Create OrgForm Entry");
+                return Request.CreateResponse(HttpStatusCode.OK, resp);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error: Create OrgForm Failed", ex);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
+    }
+}
