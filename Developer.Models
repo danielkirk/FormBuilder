@@ -1,0 +1,10 @@
+namespace Developer.Models.Requests
+{
+    public class FormAddRequest
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public decimal Version { get; set; }
+        public string ModifiedBy { get; set; }
+    }
+}
