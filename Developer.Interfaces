@@ -1,0 +1,20 @@
+using Developer.Models.Domain;
+using Developer.Models.Requests;
+
+namespace Developer.Services
+{
+    public interface IFormService
+    {
+       int Create(FormAddRequest model);
+    }
+    
+    public interface IInputControlService
+    {
+        int Create(InputControlAddRequest model);
+    }
+    
+    public interface IOrgFormService
+    {
+        OrgFormAddRequest Create(OrgFormAddRequest model);
+    }
+}
